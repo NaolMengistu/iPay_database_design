@@ -1,59 +1,58 @@
-# Mobile Payment Service Database
+# Database Design for a Mobile Payment Service
 
-This repository contains the database design for a mobile payment service similar to platforms like Cash App or Venmo. The database was developed as part of my bachelor thesis and is designed to support the backend of a mobile payment platform, facilitating user account management, peer-to-peer transactions, service purchases, and more.
+ This repository contains a **MySQL**-based database design for a mobile payment service similar to platforms like Cash App or Venmo. Developed as part of my bachelor thesis, it is structured to support user account management, peer-to-peer transactions, service purchases, and robust auditing, with a strong emphasis on data integrity and scalability.
 
-## Overview
+## Core Design Principles & Features
 
-The database is built using **MySQL** and adheres to relational database design principles, including ACID compliance and normalization up to the Third Normal Form (3NF). The design emphasizes scalability, consistency, and maintainability while ensuring data security and integrity.
+The entire schema was built upon a foundation of principles essential for any financial application, ensuring reliability and maintainability.
 
-### Features
-- **User Management**: Tracks user profiles, credentials, and balances.
-- **Transactions**: Manages peer-to-peer payments, service purchases, and transaction statuses.
-- **Services**: Supports tracking of platform-based services and purchases.
-- **Audit and Tracking**: Logs database changes for transparency and troubleshooting.
-- **Modular Design**: Ensures scalability and adaptability for future expansions.
+-   **ACID Compliance:** Built on a relational model to guarantee **A**tomicity, **C**onsistency, **I**solation, and **D**urability for every transaction, ensuring data is never left in a corrupted or inconsistent state.
+-   **Normalization (up to 3NF):** The schema was systematically normalized to the **Third Normal Form (3NF)** to eliminate data redundancy, prevent update anomalies, and ensure data integrity.
+-   **Scalability & Modular Design:** Core functionalities like user identity, accounts, and transactions are separated into logical, interconnected modules. This makes the system easier to maintain and allows for future expansion without requiring a major redesign.
+-   **Audit and Tracking:** A dedicated `tracker` table functions as an immutable audit log, recording every change made to any row in the database. This provides a powerful layer of transparency crucial for financial auditing and forensic investigations.
 
-## Files
+## Database Schema (ERD)
 
-### 1. `iPay database.mwb`
-The MySQL Workbench file (`.mwb`) contains the full database schema, including all entities, attributes, relationships, and constraints. Open this file in MySQL Workbench for a visual representation of the schema.
+The following Entity-Relationship Diagram provides a complete visual overview of the final, normalized schema, including all tables, columns, and the relationships between them.
 
-### 2. `iPay database.sql`
-This SQL file contains the full script to create the database schema. It is suitable for direct import into a MySQL database instance.
+![Database Schema](images/database-schema.png)
 
-#### How to Use `iPay database.sql`
-1. Open your MySQL client or database management tool.
-2. Import the `iPay database.sql` file.
-   - Example using MySQL command line:
-     ```bash
-     mysql -u [username] -p [database_name] < iPay database.sql
-     ```
-3. Verify that the schema is created and ready for use.
+### Key Entities
 
-## Database Schema
+The schema is organized around these core entities:
 
-The database schema is designed to support the following key entities and relationships:
+1.  **Person:** Stores fundamental identity information (name, email, date of birth).
+2.  **Address & Country:** Captures user and service provider addresses in a structured way.
+3.  **User:** Represents a user's digital identity within the app, linking a `Person` to their account and balance.
+4.  **Account & Card:** Manages linked financial instruments, including bank accounts and payment cards, with distinct types.
+5.  **Transaction:** The central hub that records every money transfer, service purchase, and its associated metadata.
+6.  **Service & Service Provider:** Tracks third-party services offered on the platform and the businesses that provide them.
+7.  **Supporting Tables (`Fee`, `Currency`, `Status`, etc.):** A set of lookup tables that provide consistency and flexibility for managing transaction details.
 
-1. **Person**: Stores personal information like name, email, phone number, and associated addresses.
-2. **Address**: Captures user and service provider addresses.
-3. **User**: Links personal profiles to account details and balances.
-4. **Account**: Tracks internal and external account numbers.
-5. **Card**: Stores card details, including PAN, expiration date, and CVV.
-6. **Transaction**: Manages money transfers, service purchases, and related metadata.
-7. **Service**: Tracks services offered by providers and purchased by users.
-8. **Fee**: Defines and applies transaction fees based on transaction types.
-9. **Currency**: Supports multi-currency transactions.
-10. **Status**: Tracks the state of transactions (e.g., pending, completed, failed).
-11. **Tracker**: Logs database changes for auditing purposes.
+## Repository Contents
 
-### Key Design Highlights
-- **Normalization**: The database schema follows the First (1NF), Second (2NF), and Third Normal Forms (3NF) to minimize redundancy and maintain consistency.
-- **ACID Compliance**: Ensures atomicity, consistency, isolation, and durability for reliable transactions.
-- **Scalability**: Designed to accommodate future expansions and additional features.
+This repository provides two key files to explore and use the schema:
+
+1.  **`iPay database.mwb`**
+    *   The MySQL Workbench file containing the full visual data model. This is the best way to interactively explore the schema, relationships, and constraints.
+
+2.  **`iPay database.sql`**
+    *   The complete SQL script required to generate the entire database schema. This file can be directly imported into any MySQL instance.
 
 ## Getting Started
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/Naola/iPay_database_design.git
-2. Open iPay database.mwb in MySQL Workbench to view the schema, or import iPay database.sql into your MySQL instance.
+To use this schema, you'll need a MySQL server and a client like MySQL Workbench or the command-line interface.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/NaolMengistu/iPay_database_design.git
+    cd iPay_database_design
+    ```
+
+2.  **Choose your method:**
+    *   **Option A (Visual Exploration):** Open the `iPay database.mwb` file in MySQL Workbench to view the interactive ERD.
+    *   **Option B (Direct Deployment):** Import the `iPay database.sql` script into your MySQL instance to create all the tables.
+        *   Example using the MySQL command line:
+            ```bash
+            mysql -u your_username -p your_database_name < "iPay database.sql"
+            ```
